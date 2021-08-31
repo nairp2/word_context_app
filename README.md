@@ -10,7 +10,7 @@ conda install -c conda-forge spacy
 
 python -m spacy download en_core_web_lg
 
-conda install pytorch torchvision torchaudio cudatoolkit=11.1 -c pytorch -c conda-forge
+conda install pytorch torchvision torchaudio cudatoolkit=10.2 -c pytorch
 
 conda install -c huggingface transformers
 
