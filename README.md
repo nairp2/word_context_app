@@ -6,9 +6,7 @@
 
 I would suggest making a new virtual environment in anaconda. Type the following in the anaconda terminal
 
-conda install -c conda-forge spacy
-python -m spacy download en_core_web_sm
-python -m spacy download en_core_web_md
+conda install -c conda-forge spacy \n
 python -m spacy download en_core_web_lg
 
 Afterwards the script should be good to run
