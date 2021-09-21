@@ -10,12 +10,4 @@ conda install -c conda-forge spacy
 
 python -m spacy download en_core_web_lg
 
-conda install pytorch torchvision torchaudio cpuonly -c pytorch
-
-conda install -c huggingface transformers
-
-conda install -c conda-forge sentence-transformers
-
-
-
 Afterwards the script should be good to run
