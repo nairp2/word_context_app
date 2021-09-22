@@ -2,9 +2,18 @@
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
-    <title></title>
+    <title>Word Context App</title>
   </head>
   <body>
     <h1>Word Context app</h1>
+    <form method="post" enctype="multipart/form-data" action="wordquery">
+      {% csrf_token %}
+      <label for="query">Enter query:</label>
+      <input type="text" name="query">
+      <input type="submit" value="Search">
+      <br>
+    </form>
+
+    {{output}}
   </body>
 </html>
