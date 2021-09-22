@@ -10,6 +10,7 @@ import os
 import docx2txt
 import pandas as pd
 pd.set_option('display.max_columns', None)
+pd.set_option('max_colwidth', 50)
 pd.set_option("max_rows", None)
 import warnings
 warnings.filterwarnings("ignore")
@@ -21,7 +22,6 @@ import re
 
 nlp = spacy.load('en_core_web_lg',disable = ['ner', 'parser'])
 spacy_stopwords = spacy.lang.en.stop_words.STOP_WORDS
-print(nlp.pipe_names)
 
 
 # In[12]:
@@ -62,9 +62,7 @@ def all_file_paths(master_directory):
 
 
 # In[13]:
-all_path = all_file_paths('bbc_doc')
-for i in all_path:
-    print(i)
+
 
 
 # In[21]:
@@ -225,29 +223,73 @@ def sim_word(path,query,score):
 
 #FI & PN
 
+# In[30]:
 
+import sys
+
+    
+var = sys.argv
+
+query = var[1]
+directory = var[2]
+
+# query = "profit"
+
+# In[30]:
+
+all_path = all_file_paths(directory)
+
+for i in all_path:
+    print(i)
+    
 # In[30]:
 
 
 # Check unigram,bigram, web app interface, check time complexity with 300 pages dataset, similar to google search from 1-100(access index of dataframe list: click 1 will trigger i-1 index of list)
+print('\n')
+print("ONE")
+print("ONE")
+print("ONE")
+
+for i in all_path[:]:
+    output = sim_word(i,query,0.6)
+    
+    if output.empty:
+        print('\n')
+        print("Query - '{}' and similar words \nnot found in file path - {}".format(query,i))
+        print("------------------------------------------------")
+    else:
+        output = output[output.Count != 0]
+        
+        print('\n')
+        print("Query - '{}'".format(query))
+        print("file path - {}".format(i))
+        print(output.iloc[0,:][1:])
+        print("------------------------------------------------")
+
+    
+# In[30]:
+        
+print("ALL")
+print("ALL")
+print("ALL")
 
 for i in all_path[:]:
     output = sim_word(i,"profit",0.6)
     
     if output.empty:
-        continue
+        print('\n')
+        print("Query - '{}' and similar words \nnot found in file path - {}".format(query,i))
+        print("------------------------------------------------")
+        
     else:
         output = output[output.Count != 0]
         
         print('\n')
-        print(i)
-        print('\n')
-        print(output.iloc[0,:][1:])
-#        print(output.iloc[:,-1][0])
-        print('\n')
+        print("Query - {}".format(query))
+        print("file path - {}".format(i))
         print(output)
         print("------------------------------------------------")
-        break
 
 
 
