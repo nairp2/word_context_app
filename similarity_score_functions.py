@@ -95,11 +95,9 @@ def word_occurences(text, tokens_str, query):
 
     for i in list(zip(tokens_str, wordfreq)):
         if query == i[0]:
-            word_occurences = (i[0], i[1])
             break
 
     line = 0
-    word_not_found = []
 
     for word in text:
         if word == '\n':
@@ -109,9 +107,6 @@ def word_occurences(text, tokens_str, query):
     doc_list = [i for i in doc_list if i]
     
     return doc_list
-
-
-# In[ ]:
 
 
 
@@ -161,7 +156,6 @@ def sim_word(path,query,score):
     
     string_list = []
     paragraph_list = []
-    paragraph_matrix_list = []
     
     string_list.append(string_txt)
     
@@ -202,7 +196,6 @@ def sim_word(path,query,score):
             #print(line_list)
             l_line_list = []
             l_line_list.append(tuple(line_list))
-            paragraph_lines = list(line_list)
             #paragraph_lines = [ele for ele in paragraph_lines if ele != []]
             word_count.append(len(word_found_lines))
             
@@ -216,6 +209,7 @@ def sim_word(path,query,score):
     matrix = matrix.drop_duplicates()
 
     matrix =  matrix.sort_values(by=['Similarity Score'],ascending=False)
+    matrix = matrix[matrix.Count != 0]
     #print("For document: {}, path: {}, keyword: {}, Similarity Score Threshold: {}".format(os.path.basename(path),path,query,score))
     #print(matrix)
     return matrix
@@ -223,73 +217,62 @@ def sim_word(path,query,score):
 
 #FI & PN
 
-# In[30]:
-
-import sys
-
-    
-var = sys.argv
-
-query = var[1]
-directory = var[2]
-
-# query = "profit"
 
 # In[30]:
 
-all_path = all_file_paths(directory)
+# all_path = all_file_paths("bbc_doc")
 
-for i in all_path:
-    print(i)
+# for i in all_path:
+#     print(i)
     
 # In[30]:
 
 
 # Check unigram,bigram, web app interface, check time complexity with 300 pages dataset, similar to google search from 1-100(access index of dataframe list: click 1 will trigger i-1 index of list)
-print('\n')
-print("ONE")
-print("ONE")
-print("ONE")
+# print('\n')
+# print("ONE")
+# print("ONE")
+# print("ONE")
 
-for i in all_path[:]:
-    output = sim_word(i,query,0.6)
+# for i in all_path[:]:
+#     output = sim_word(i,query,0.6)
     
-    if output.empty:
-        print('\n')
-        print("Query - '{}' and similar words \nnot found in file path - {}".format(query,i))
-        print("------------------------------------------------")
-    else:
-        output = output[output.Count != 0]
+#     if output.empty:
+#         print('\n')
+#         print("Query - '{}' and similar words \nnot found in file path - {}".format(query,i))
+#         print("------------------------------------------------")
+#     else:
+#         output = output[output.Count != 0]
         
-        print('\n')
-        print("Query - '{}'".format(query))
-        print("file path - {}".format(i))
-        print(output.iloc[0,:][1:])
-        print("------------------------------------------------")
+#         print('\n')
+#         print("Query - '{}'".format(query))
+#         print("file path - {}".format(i))
+#         print(output)
+#         print("------------------------------------------------")
 
     
-# In[30]:
+# # In[30]:
         
-print("ALL")
-print("ALL")
-print("ALL")
+# print("ALL")
+# print("ALL")
+# print("ALL")
 
-for i in all_path[:]:
-    output = sim_word(i,"profit",0.6)
+# for i in all_path[:]:
+#     output = sim_word(i,"profit",0.6)
     
-    if output.empty:
-        print('\n')
-        print("Query - '{}' and similar words \nnot found in file path - {}".format(query,i))
-        print("------------------------------------------------")
+#     if output.empty:
+#         print('\n')
+#         print("Query - '{}' and similar words \nnot found in file path - {}".format(query,i))
+#         print("------------------------------------------------")
         
-    else:
-        output = output[output.Count != 0]
+#     else:
+#         output = output[output.Count != 0]
         
-        print('\n')
-        print("Query - {}".format(query))
-        print("file path - {}".format(i))
-        print(output)
-        print("------------------------------------------------")
+#         print('\n')
+#         print("Query - {}".format(query))
+#         print("file path - {}".format(i))
+#         print(output)
+#         print("------------------------------------------------")
 
 
 
