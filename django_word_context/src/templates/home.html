@@ -3,17 +3,62 @@
   <head>
     <meta charset="utf-8">
     <title>Word Context App</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
   </head>
   <body>
-    <h1>Word Context app</h1>
-    <form method="post" enctype="multipart/form-data" action="wordquery">
-      {% csrf_token %}
-      <label for="query">Enter query:</label>
-      <input type="text" name="query">
-      <input type="submit" value="Search">
-      <br>
-    </form>
-
-    {{output}}
+  <div class="container">
+    <br>
+    <br>
+    <div class="content">
+      <form method="post" class="text-center" enctype="multipart/form-data" action="wordquery">
+        {% csrf_token %}
+        <label for="query">Enter query:</label>
+        <input type="text" name="query">
+        <input type="submit" value="Search">
+        <br>
+      </form>
+    </div>
+  </div>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <h2 class="text-center"><u>Word Context Feedback</u></h2><br>
+  <div class="container" style= "height: 450px; overflow-y: scroll;">
+      <table class="table table-dark table-striped">
+        <thead>
+          <tr>
+            <th>Words</th>
+            <th>Similarity Score</th>
+            <th>Paragraph Numbers</th>
+            <th>Count</th>
+            <th>Paragraphs</th>
+            <th>Path</th>
+          </tr>
+        </thead>
+        <tbody>
+        <!-- jinja2 Technique -->
+        {% if d %}
+        {% for i in d %}
+          <tr>
+            <td>{{i.Words}}</td>
+            <td>{{i.Similarity_Score}}</td>
+            <td>{{i.Paragraph_Numbers}}</td>
+            <td>{{i.Count}}</td>
+            <td>{{i.Paragraphs}}</td>
+            <td>{{i.Path}}</td>
+          </tr>
+        {% endfor %}
+        {% endif %}
+        </tbody>
+      </table>
+    </div>
   </body>
 </html>

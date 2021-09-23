@@ -142,7 +142,7 @@ def sim_word(path,query,score):
         s = key.similarity(i)
 
         if s > score:
-            words.append(i)
+            words.append(i.text)
 
             # PN
             sim_score.append(s)
@@ -160,12 +160,12 @@ def sim_word(path,query,score):
             pg_list.append(tuple(word_found_lines))
             line_list_words.append(tuple(line_list))
 
-    matrix = pd.DataFrame({'Similarity Score': sim_score,'Paragraph Numbers': pg_list, 'Count': word_count, 'Paragraphs': line_list_words, 'Path': path}, index = words)
+    matrix = pd.DataFrame({'Words': words, 'Similarity_Score': sim_score,'Paragraph_Numbers': pg_list, 'Count': word_count, 'Paragraphs': line_list_words, 'Path': path}, index = words)
 
     #matrix = pd.DataFrame({'Similarity Score': sim_score,'Paragraph Numbers': pg_list, 'Count': word_count}, index = words)
     matrix = matrix.drop_duplicates()
 
-    matrix =  matrix.sort_values(by=['Similarity Score'],ascending=False)
+    matrix =  matrix.sort_values(by=['Similarity_Score'],ascending=False)
     #print("For document: {}, path: {}, keyword: {}, Similarity Score Threshold: {}".format(os.path.basename(path),path,query,score))
     #print(matrix)
     return matrix
@@ -180,7 +180,7 @@ def nlp_query(query):
 
     #all_file_paths(master_directory)
 
-    all_path = all_file_paths('static/bbc_doc')
+    all_path = all_file_paths('bbc_doc')
     #print(all_path)
 
     #for i in all_path:
@@ -203,10 +203,13 @@ def nlp_query(query):
         final_df.append(df)
     # Check unigram,bigram, web app interface, check time complexity with 300 pages dataset, similar to google search from 1-100(access index of dataframe list: click 1 will trigger i-1 index of list)
 
+    df = pd.concat(final_df)
     #print("Word df:")
     #print(word_df)
     print("Final df:")
-    print(final_df[0]['Similarity Score'])
+    print(df)
 
-    json = {'output': final_df}
-    return json
+
+    output = df
+    #json = {'output': final_df[0]}
+    return output
