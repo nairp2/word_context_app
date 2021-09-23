@@ -1,5 +1,7 @@
 from django.shortcuts import render
+from django.shortcuts import HttpResponse
 from word_context_app import nlp
+import json
 
 # Create your views here.
 def home(request):
@@ -16,6 +18,11 @@ def wordquery(request):
     #    print(request.POST.get('query'))
     query = str(request.POST['query'])
 
-    json = nlp.nlp_query(query)
+    output = nlp.nlp_query(query)
+    output_index = output.to_json(orient="records")
+    data = []
+    data = json.loads(output_index)
+    context = {'d': data}
     #json = {'query': query}
-    return render(request, 'home.html', json)
+    #return HttpResponse(output)
+    return render(request, 'home.html', context)
