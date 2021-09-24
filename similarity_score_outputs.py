@@ -32,11 +32,23 @@ all_path = all_file_paths("bbc_doc")
 
 for i in all_path:
     print(i)
+
+# In[10]:    
     
+print(sim_word("bbc_doc//business//001.docx",query,0.6))
+
+# In[10]:  
+print(sim_word("bbc_doc\\business\\001.docx",query,0.6))
+  
+# In[10]:    
+  
+
+
+
 # In[10]:
 start = time.time()
 
-output = sim_word("bbc_doc/business/001.docx",query,0.6)
+output = sim_word("bbc_doc//business//001.docx",query,0.6)
 
 if output.empty:
     print('\n')
@@ -61,7 +73,24 @@ print("time",end - start)
 start = time.time()
 
 for i in all_path:
-    output = sim_word("bbc_doc/business/001.docx",query,0.6)
+    output = sim_word(i,query,0.99)
+    
+    if output.empty:
+        print('\n')
+        print("Query - '{}' and similar words \nnot found in file path - {}".format(query,i))
+        print("------------------------------------------------")
+    else:
+        output = output[output.Count != 0]
+        
+        print('\n')
+        print("Query - '{}'".format(query))
+        print("file path - {}".format(i))
+        print(output)
+        print("------------------------------------------------")
+
+    
+for i in all_path:
+    output = sim_word(i,query,0.6)
     
     if output.empty:
         print('\n')
@@ -81,28 +110,7 @@ print("time",end - start)
     
 # In[10]:
 
-    
 
-
-
-
-
-
-def sq(x):
-    print(x**2)
-    
-    
-
-
-
-
-    
-# In[10]:
-
-x = 2
-
-
-sq(x)
 
 
 

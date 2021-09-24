@@ -7,6 +7,9 @@
 import spacy
 from spacy.language import Language
 import os
+import ntpath
+from pathlib import Path
+
 import docx2txt
 import pandas as pd
 pd.set_option('display.max_columns', None)
@@ -51,8 +54,10 @@ def all_file_paths(master_directory):
 
         if files:
             for i in files:
-                path = "{}\{}".format(root,i)
-                if path == 'bbc_doc\desktop.ini':
+                path = os.path.join(root, i)
+                path = path.replace(os.path.sep, '/')
+
+                if path == 'bbc_doc/desktop.ini':
                     continue
                 path_l.append(path)
                 
@@ -62,7 +67,22 @@ def all_file_paths(master_directory):
 
 
 # In[21]:
+    
+all_path = all_file_paths("bbc_doc")
 
+print(all_path[0])
+
+
+
+# In[10]:    
+    
+print(sim_word("bbc_doc//business//001.docx","profit",0.6))
+
+# In[10]:  
+print(sim_word("bbc_doc\\business\\001.docx","profit",0.6))
+
+
+# In[21]:
 
 
 def preprocessor(text):
@@ -159,7 +179,7 @@ def sim_word(path,query,score):
     for i in lemma_list:
         s = key.similarity(i)
 
-        if s > score:
+        if s >= score:
             words.append(i)
                 
             # PN
