@@ -61,10 +61,6 @@ def all_file_paths(master_directory):
 
 
 
-# In[13]:
-
-
-
 # In[21]:
 
 
@@ -88,20 +84,6 @@ def findline(word,doc_list): #Added doc_list as var
 
 def word_occurences(text, tokens_str, query):
     
-    wordfreq = []
-    for w in tokens_str:
-        wordfreq.append(tokens_str.count(w))
-
-
-    for i in list(zip(tokens_str, wordfreq)):
-        if query == i[0]:
-            break
-
-    line = 0
-
-    for word in text:
-        if word == '\n':
-            line += 1
 
     doc_list = text.lower().splitlines()
     doc_list = [i for i in doc_list if i]
@@ -129,10 +111,7 @@ def sim_word(path,query,score):
             if token_preprocessed != '':
                  lemma_list.append(nlp(token_preprocessed))
    
-
-    tokens_str = text.lower()
-    tokens_str = word_tokenize(tokens_str)
-    tokens_str = [i for i in tokens_str if not i in stop_words]    
+  
 #FI    
     
     query = query
@@ -154,18 +133,15 @@ def sim_word(path,query,score):
 #PN 
     doc_list = word_occurences(text, lemma_list, query)
     
-    string_list = []
+
     paragraph_list = []
     
-    string_list.append(string_txt)
-    
-    string_list = string_list[0].splitlines()
+    string_list = string_txt.splitlines()
     
     for word in string_list:
         if word != '':
             paragraph_list.append(word)
-    
-    #print(paragraph_list)
+
 #PN
 
 
@@ -175,8 +151,7 @@ def sim_word(path,query,score):
     sim_score = []
     words = []
     word_count = []
-    #paragraph_word_set = set()
-   # paragraph_sentences = []
+
 
     pg_list = []
     line_list_words = []
@@ -189,14 +164,9 @@ def sim_word(path,query,score):
                 
             # PN
             
+            word_found_lines, line_list = findline(str(i.text),doc_list)
 
-            word_found_list = []
-            word_found_list.append(str(i.text))
-            word_found_lines, line_list = findline(word_found_list[0],doc_list)
-            #print(line_list)
-            l_line_list = []
-            l_line_list.append(tuple(line_list))
-            #paragraph_lines = [ele for ele in paragraph_lines if ele != []]
+
             word_count.append(len(word_found_lines))
             
             pg_list.append(tuple(word_found_lines))
@@ -205,15 +175,13 @@ def sim_word(path,query,score):
     
     matrix = pd.DataFrame({'Similarity Score': sim_score,'Paragraph Numbers': pg_list, 'Count': word_count, 'Paragraphs': line_list_words}, index = words)
 
-    #matrix = pd.DataFrame({'Similarity Score': sim_score,'Paragraph Numbers': pg_list, 'Count': word_count}, index = words)
     matrix = matrix.drop_duplicates()
 
     matrix =  matrix.sort_values(by=['Similarity Score'],ascending=False)
     matrix = matrix[matrix.Count != 0]
-    #print("For document: {}, path: {}, keyword: {}, Similarity Score Threshold: {}".format(os.path.basename(path),path,query,score))
-    #print(matrix)
+
     return matrix
-   # print('\n')
+
 
 #FI & PN
 
