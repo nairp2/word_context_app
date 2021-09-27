@@ -5,6 +5,8 @@ from word_context_app import views
 
 urlpatterns = [
     path('', views.home, name='home'),
+    #path('path', views.path, name='path'),
     #path('result/', views.result, name='json'),
-    url('wordquery', views.wordquery, name='wordquery')
+    path('wordquery', views.wordquery, name='wordquery')
+
 ]

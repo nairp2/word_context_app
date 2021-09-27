@@ -10,23 +10,49 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
   </head>
+
+  <style>
+    .paths {
+      min-height:100px;
+      overflow-y :auto;
+      overflow-x:hidden;
+      position:absolute;
+      width:100px;
+      display: contents;
+    }
+  </style>
   <body>
   <div class="container">
     <br>
     <br>
     <div class="content">
+    <!--  <form name="paths" method="post" class="text-left" action="wordquery">
+        {% for path in paths %}
+          <li><a href="{% url 'home' %}">{{ path|safe }}</a></li>
+        {% endfor %}
+      </form> -->
       <form method="post" class="text-center" enctype="multipart/form-data" action="wordquery">
         {% csrf_token %}
         <label for="query">Enter query:</label>
-        <input type="text" name="query">
-        <input type="submit" value="Search">
+        <input type="text" name="query" required>
         <br>
+        <label for="path">Select query directory path:</label>
+          <select name="paths" size="1" id="paths">
+            <option value="{{paths.0}}" SELECTED>{{paths.0}}</option>
+              {% for i in paths %}
+                <option value="{{i}}">{{i}}</option>
+              {% endfor %}
+          </select>
+          <p>Select checkbox based on similarity score for exact query:</p>
+          <input type="hidden" id="sim_score" name="sim_score" value="0.6">
+          <input type="checkbox" id="sim_score" name="sim_score" value="1.0">
+         <label for="sim_score">1.0</label>
+         <br>
+        <input type="submit" value="Search">
       </form>
     </div>
+    <p class="text-center">{{word_not_found}}</p>
   </div>
-  <br>
-  <br>
-  <br>
   <br>
   <br>
   <br>
@@ -44,7 +70,20 @@
           </tr>
         </thead>
         <tbody>
-        <!-- jinja2 Technique -->
+        <!-- jinja2 Technique
+        {% if d %}
+        {% for i in d %}
+          <tr>
+            <td>{{i.Words}}</td>
+            <td>{{i.Similarity_Score}}</td>
+            <td>{{i.Paragraph_Numbers}}</td>
+            <td>{{i.Count}}</td>
+            <td>{{i.Paragraphs}}</td>
+            <td>{{i.Path}}</td>
+          </tr>
+        {% endfor %}
+        {% endif %}
+        -->
         {% if d %}
         {% for i in d %}
           <tr>

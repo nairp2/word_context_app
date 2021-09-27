@@ -1,5 +1,6 @@
 import pandas as pd
 import spacy
+import numpy as np
 from spacy.language import Language
 import os
 import docx2txt
@@ -14,14 +15,18 @@ from nltk.tokenize import word_tokenize
 stop_words = set(stopwords.words("english"))
 
 def all_file_paths(master_directory):
+
     path_l = []
-    #for root, dirs, files in os.walk(master_directory):
     for root, dirs, files in os.walk(master_directory):
+
+
+
         if files:
             for i in files:
-                path = "{}\{}".format(root,i)
-                #print("Path: {}".format(path))
-                if path == 'bbc_doc\desktop.ini':
+                path = os.path.join(root, i)
+                path = path.replace(os.path.sep, '/')
+
+                if path == 'bbc_doc/desktop.ini':
                     continue
                 path_l.append(path)
 
@@ -46,22 +51,22 @@ def findline(word,doc_list): #Added doc_list as var
 
 def word_occurences(text, tokens_str, query):
 
-    wordfreq = []
-    for w in tokens_str:
-        wordfreq.append(tokens_str.count(w))
-
-
-    for i in list(zip(tokens_str, wordfreq)):
-        if query == i[0]:
-            word_occurences = (i[0], i[1])
-            break
-
-    line = 0
-    word_not_found = []
-
-    for word in text:
-        if word == '\n':
-            line += 1
+    # wordfreq = []
+    # for w in tokens_str:
+    #     wordfreq.append(tokens_str.count(w))
+    #
+    #
+    # for i in list(zip(tokens_str, wordfreq)):
+    #     if query == i[0]:
+    #         word_occurences = (i[0], i[1])
+    #         break
+    #
+    # line = 0
+    # word_not_found = []
+    #
+    # for word in text:
+    #     if word == '\n':
+    #         line += 1
 
     doc_list = text.lower().splitlines()
     doc_list = [i for i in doc_list if i]
@@ -110,13 +115,15 @@ def sim_word(path,query,score):
 #PN
     doc_list = word_occurences(text, lemma_list, query)
 
-    string_list = []
+    # string_list = []
     paragraph_list = []
     paragraph_matrix_list = []
 
-    string_list.append(string_txt)
+    # string_list.append(string_txt)
+    #
+    # string_list = string_list[0].splitlines()
 
-    string_list = string_list[0].splitlines()
+    string_list = string_txt.splitlines()
 
     for word in string_list:
         if word != '':
@@ -141,15 +148,17 @@ def sim_word(path,query,score):
     for i in lemma_list:
         s = key.similarity(i)
 
-        if s > score:
+        if s >= score:
             words.append(i.text)
 
             # PN
             sim_score.append(s)
 
-            word_found_list = []
-            word_found_list.append(str(i.text))
-            word_found_lines, line_list = findline(word_found_list[0],doc_list)
+
+
+
+
+            word_found_lines, line_list = findline(str(i.text),doc_list)
             #print(line_list)
             l_line_list = []
             l_line_list.append(tuple(line_list))
@@ -159,6 +168,8 @@ def sim_word(path,query,score):
 
             pg_list.append(tuple(word_found_lines))
             line_list_words.append(tuple(line_list))
+
+    sim_score = np.around(np.array(sim_score),2)
 
     matrix = pd.DataFrame({'Words': words, 'Similarity_Score': sim_score,'Paragraph_Numbers': pg_list, 'Count': word_count, 'Paragraphs': line_list_words, 'Path': path}, index = words)
 
@@ -172,7 +183,7 @@ def sim_word(path,query,score):
    # print('\n')
 
 
-def nlp_query(query):
+def nlp_query(query, path, sim_score):
 
     nlp = spacy.load('en_core_web_lg',disable = ['ner', 'parser'])
     spacy_stopwords = spacy.lang.en.stop_words.STOP_WORDS
@@ -180,7 +191,7 @@ def nlp_query(query):
 
     #all_file_paths(master_directory)
 
-    all_path = all_file_paths('bbc_doc')
+
     #print(all_path)
 
     #for i in all_path:
@@ -188,28 +199,33 @@ def nlp_query(query):
 
     #sim_word(path,query,score)
 
-    word_df = []
-    final_df = []
+    # word_df = []
+    # final_df = []
 
-    for i in all_path[:]:
-        output = sim_word(i,query,0.6)
-        word_df.append(output)
+    #for i in all_path[:]:
 
-    word_df = [df for df in word_df if not df.empty] # removing dataframes that are empty
+    output = sim_word(path,query, score=sim_score)
+        #word_df.append(output)
+    output = output[output.Count != 0]
 
+    #if sim_score == 1.0:
+    #    output = output[output.Similarity_Score == 1.0]
+    #word_df = [df for df in word_df if not df.empty] # removing dataframes that are empty
     # dropping rows with Count having a value of 0
-    for df in word_df:
-        df = df[df.Count != 0]
-        final_df.append(df)
+    #for df in word_df:
+    #    df = df[df.Count != 0]
+    #    final_df.append(df)
     # Check unigram,bigram, web app interface, check time complexity with 300 pages dataset, similar to google search from 1-100(access index of dataframe list: click 1 will trigger i-1 index of list)
 
-    df = pd.concat(final_df)
+    #print(final_df)
+
+    #df = pd.concat(final_df)
     #print("Word df:")
     #print(word_df)
-    print("Final df:")
-    print(df)
+    #print("Final df:")
+    #print(df)
 
 
-    output = df
+    #output = df
     #json = {'output': final_df[0]}
     return output

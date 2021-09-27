@@ -121,7 +121,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "bbc_doc"),
+    os.path.join(BASE_DIR, "bbc_doc"), # TODO: check if txt file can be passed
 ]
 
 # Default primary key field type
