@@ -171,7 +171,7 @@ def sim_word(path,query,score):
 
     sim_score = np.around(np.array(sim_score),2)
 
-    matrix = pd.DataFrame({'Words': words, 'Similarity_Score': sim_score,'Paragraph_Numbers': pg_list, 'Count': word_count, 'Paragraphs': line_list_words, 'Path': path}, index = words)
+    matrix = pd.DataFrame({'Words': words, 'Similarity_Score': sim_score,'Paragraph_Numbers': pg_list, 'Count': word_count, 'Paragraphs': line_list_words}, index = words)
 
     #matrix = pd.DataFrame({'Similarity Score': sim_score,'Paragraph Numbers': pg_list, 'Count': word_count}, index = words)
     matrix = matrix.drop_duplicates()
@@ -207,7 +207,8 @@ def nlp_query(query, path, sim_score):
     output = sim_word(path,query, score=sim_score)
         #word_df.append(output)
     output = output[output.Count != 0]
-
+    output = output.explode(['Paragraphs', 'Paragraph_Numbers'])
+    output.loc[(output['Words'].duplicated() & output['Similarity_Score'].duplicated() & output['Count'].duplicated()), ['Words', 'Similarity_Score', 'Count']] = ''
     #if sim_score == 1.0:
     #    output = output[output.Similarity_Score == 1.0]
     #word_df = [df for df in word_df if not df.empty] # removing dataframes that are empty

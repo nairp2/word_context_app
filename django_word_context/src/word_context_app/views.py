@@ -35,6 +35,7 @@ def wordquery(request):
     print(path)
     print(sim_score)
 
+    text_doc = "For document:  "
     paths = script1.script_load_paths()
 
     output1, word_not_found = script1.script_select_paths(query, path, sim_score)
@@ -46,7 +47,7 @@ def wordquery(request):
     #output_index = output.to_json(orient="records")
     #data = []
     #data = json.loads(output_index)
-    context = {'d': data1, 'paths': paths, 'word_not_found': word_not_found}
+    context = {'d': data1, 'paths': paths, 'word_not_found': word_not_found, 'selected_path': path, 'text_doc': text_doc}
     #context = {'d': data, 'paths': data1}
     #json = {'query': query}
     #return HttpResponse(output)
