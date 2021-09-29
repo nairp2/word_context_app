@@ -188,6 +188,13 @@ def nlp_query(query, root, sim_score):
     nlp = spacy.load('en_core_web_lg',disable = ['ner', 'parser'])
     spacy_stopwords = spacy.lang.en.stop_words.STOP_WORDS
     #print(nlp.pipe_names)
+    if not os.path.exists('Index'):
+       os.makedirs('Index')
+
+    if os.path.exists('Index/{}_{}_{}.csv'.format(query, root, sim_score)):
+       df = pd.read_csv('Index/{}_{}_{}.csv'.format(query, root, sim_score))
+       df = df.fillna('')
+       return df
 
     all_path = all_file_paths(root) # change to root
     #print(all_path)
@@ -234,7 +241,7 @@ def nlp_query(query, root, sim_score):
     #print("Final df:")
     #print(df)
 
-
+    df.to_csv("Index/{}_{}_{}.csv".format(query, root, sim_score), index=False)
     #output = df
     #json = {'output': final_df[0]}
     return df
