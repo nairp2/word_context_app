@@ -36,6 +36,10 @@
         <label for="query">Enter query:</label>
         <input type="text" name="query" required>
         <br>
+        <label for="path">Enter root directory:</label>
+        <input type="text" name="root" required>
+        <br>
+        <!--
         <label for="path">Select query directory path:</label>
           <select name="paths" size="1" id="paths">
             <option value="{{paths.0}}" SELECTED>{{paths.0}}</option>
@@ -43,7 +47,7 @@
                 <option value="{{i}}">{{i}}</option>
               {% endfor %}
           </select>
-          <br>
+          <br> -->
           <input type="hidden" id="sim_score" name="sim_score" value="0.6">
           <input type="checkbox" id="sim_score" name="sim_score" value="1.0">
          <label for="sim_score">Exact query match</label>
@@ -51,11 +55,11 @@
         <input type="submit" value="Search">
       </form>
     </div>
-    <p class="text-center">{{word_not_found}}</p>
+     <p class="text-center">{{word_not_found}}</p>
   </div>
   <br>
   <h2 class="text-center"><u>Word Context Feedback</u></h2><br>
-  <p class="text-center">{{text_doc}}{{selected_path}}</p>
+  <p class="text-center">{{query_UI}}{{query}}, {{root_UI}}{{root}}, {{sim_UI}}{{sim_score}}</p>
   <div class="container" style= "height: 450px; overflow-y: scroll;">
       <table class="table table-dark table-striped">
         <thead>
@@ -65,10 +69,11 @@
             <th>Paragraph Numbers</th>
             <th>Count</th>
             <th>Paragraphs</th>
+            <th>Path</th>
           </tr>
         </thead>
         <tbody>
-        <!-- jinja2 Technique
+        <!-- jinja2 Technique -->
         {% if d %}
         {% for i in d %}
           <tr>
@@ -78,18 +83,6 @@
             <td>{{i.Count}}</td>
             <td>{{i.Paragraphs}}</td>
             <td>{{i.Path}}</td>
-          </tr>
-        {% endfor %}
-        {% endif %}
-        -->
-        {% if d %}
-        {% for i in d %}
-          <tr>
-            <td>{{i.Words}}</td>
-            <td>{{i.Similarity_Score}}</td>
-            <td>{{i.Paragraph_Numbers}}</td>
-            <td>{{i.Count}}</td>
-            <td>{{i.Paragraphs}}</td>
           </tr>
         {% endfor %}
         {% endif %}

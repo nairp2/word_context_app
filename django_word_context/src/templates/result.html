@@ -2,10 +2,100 @@
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
-    <title></title>
+    <title>Word Context App</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
   </head>
+
+  <style>
+    .paths {
+      min-height:100px;
+      overflow-y :auto;
+      overflow-x:hidden;
+      position:absolute;
+      width:100px;
+      display: contents;
+    }
+  </style>
   <body>
-    <h1>Output:</h1>
-    <h1>{{query}}</h1>
+  <div class="container">
+    <br>
+    <br>
+    <div class="content">
+    <!--  <form name="paths" method="post" class="text-left" action="wordquery">
+        {% for path in paths %}
+          <li><a href="{% url 'home' %}">{{ path|safe }}</a></li>
+        {% endfor %}
+      </form> -->
+        <form method="post" class="text-center" enctype="multipart/form-data" action="query">
+        {% csrf_token %}
+        <label for="query">Query: {{query}}</label>
+        <br>
+        <label for="query">Root directory: {{root}}</label>
+        <br>
+        <label for="path">Select query directory path:</label>
+          <select name="paths" size="1" id="paths">
+            <option value="{{paths.0}}" SELECTED>{{paths.0}}</option>
+              {% for i in paths %}
+                <option value="{{i}}">{{i}}</option>
+              {% endfor %}
+          </select>
+          <br>
+          <input type="hidden" id="sim_score" name="sim_score" value="0.6">
+          <input type="checkbox" id="sim_score" name="sim_score" value="1.0">
+         <label for="sim_score">Exact query match</label>
+         <br>
+        <input type="submit" value="Search">
+      </form>
+    </div>
+    <p class="text-center">{{word_not_found}}</p>
+  </div>
+  <br>
+  <h2 class="text-center"><u>Word Context Feedback</u></h2><br>
+  <p class="text-center">{{text_doc}}{{selected_path}}</p>
+  <div class="container" style= "height: 450px; overflow-y: scroll;">
+      <table class="table table-dark table-striped">
+        <thead>
+          <tr>
+            <th>Words</th>
+            <th>Similarity Score</th>
+            <th>Paragraph Numbers</th>
+            <th>Count</th>
+            <th>Paragraphs</th>
+          </tr>
+        </thead>
+        <tbody>
+        <!-- jinja2 Technique
+        {% if d %}
+        {% for i in d %}
+          <tr>
+            <td>{{i.Words}}</td>
+            <td>{{i.Similarity_Score}}</td>
+            <td>{{i.Paragraph_Numbers}}</td>
+            <td>{{i.Count}}</td>
+            <td>{{i.Paragraphs}}</td>
+            <td>{{i.Path}}</td>
+          </tr>
+        {% endfor %}
+        {% endif %}
+        -->
+        {% if d %}
+        {% for i in d %}
+          <tr>
+            <td>{{i.Words}}</td>
+            <td>{{i.Similarity_Score}}</td>
+            <td>{{i.Paragraph_Numbers}}</td>
+            <td>{{i.Count}}</td>
+            <td>{{i.Paragraphs}}</td>
+          </tr>
+        {% endfor %}
+        {% endif %}
+        </tbody>
+      </table>
+    </div>
   </body>
 </html>

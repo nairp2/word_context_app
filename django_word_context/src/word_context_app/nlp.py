@@ -18,9 +18,6 @@ def all_file_paths(master_directory):
 
     path_l = []
     for root, dirs, files in os.walk(master_directory):
-
-
-
         if files:
             for i in files:
                 path = os.path.join(root, i)
@@ -73,7 +70,7 @@ def word_occurences(text, tokens_str, query):
 
     return doc_list
 
-def sim_word(path,query,score):
+def sim_word(query, path, score):
 
 #FI
     text = docx2txt.process(path)
@@ -146,6 +143,9 @@ def sim_word(path,query,score):
     line_list_words = []
 
     for i in lemma_list:
+
+        if str(i.text[-1]) == 's':
+           continue
         s = key.similarity(i)
 
         if s >= score:
@@ -171,7 +171,7 @@ def sim_word(path,query,score):
 
     sim_score = np.around(np.array(sim_score),2)
 
-    matrix = pd.DataFrame({'Words': words, 'Similarity_Score': sim_score,'Paragraph_Numbers': pg_list, 'Count': word_count, 'Paragraphs': line_list_words}, index = words)
+    matrix = pd.DataFrame({'Words': words, 'Similarity_Score': sim_score,'Paragraph_Numbers': pg_list, 'Count': word_count, 'Paragraphs': line_list_words, 'Path': path}, index = words)
 
     #matrix = pd.DataFrame({'Similarity Score': sim_score,'Paragraph Numbers': pg_list, 'Count': word_count}, index = words)
     matrix = matrix.drop_duplicates()
@@ -183,15 +183,13 @@ def sim_word(path,query,score):
    # print('\n')
 
 
-def nlp_query(query, path, sim_score):
+def nlp_query(query, root, sim_score):
 
     nlp = spacy.load('en_core_web_lg',disable = ['ner', 'parser'])
     spacy_stopwords = spacy.lang.en.stop_words.STOP_WORDS
     #print(nlp.pipe_names)
 
-    #all_file_paths(master_directory)
-
-
+    all_path = all_file_paths(root) # change to root
     #print(all_path)
 
     #for i in all_path:
@@ -199,16 +197,26 @@ def nlp_query(query, path, sim_score):
 
     #sim_word(path,query,score)
 
-    # word_df = []
+    df = pd.DataFrame()
     # final_df = []
 
-    #for i in all_path[:]:
-
-    output = sim_word(path,query, score=sim_score)
+    for i in all_path:
+        print(i)
+        output = sim_word(query, i, score=sim_score)
+        output = output[output.Count != 0]
+        output = output.explode(['Paragraphs', 'Paragraph_Numbers'])
+        output.loc[(output['Words'].duplicated() & output['Similarity_Score'].duplicated() & output['Count'].duplicated() & output['Path'].duplicated()), ['Words', 'Similarity_Score', 'Count', 'Path']] = ''
+        df = pd.concat([df, output])
         #word_df.append(output)
-    output = output[output.Count != 0]
-    output = output.explode(['Paragraphs', 'Paragraph_Numbers'])
-    output.loc[(output['Words'].duplicated() & output['Similarity_Score'].duplicated() & output['Count'].duplicated()), ['Words', 'Similarity_Score', 'Count']] = ''
+    #word_df = [df for df in word_df if not df.empty]
+    #word_df = word_df[word_df.Count != 0]
+    #df = pd.concat(word_df)
+    #print(df)
+    #df = df.explode(['Paragraphs', 'Paragraph_Numbers'])
+    #df.loc[(word_df['Words'].duplicated() & word_df['Similarity_Score'].duplicated() & word_df['Count'].duplicated()), ['Words', 'Similarity_Score', 'Count']] = ''
+    #output = output[output.Count != 0]
+    #output = output.explode(['Paragraphs', 'Paragraph_Numbers'])
+    #output.loc[(output['Words'].duplicated() & output['Similarity_Score'].duplicated() & output['Count'].duplicated()), ['Words', 'Similarity_Score', 'Count']] = ''
     #if sim_score == 1.0:
     #    output = output[output.Similarity_Score == 1.0]
     #word_df = [df for df in word_df if not df.empty] # removing dataframes that are empty
@@ -229,4 +237,4 @@ def nlp_query(query, path, sim_score):
 
     #output = df
     #json = {'output': final_df[0]}
-    return output
+    return df
