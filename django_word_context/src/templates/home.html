@@ -10,7 +10,14 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
   </head>
-
+  <script type="text/javascript">
+  function selectFolder(e) {
+    var theFiles = e.target.files;
+    var relativePath = theFiles[0].webkitRelativePath;
+    var folder = relativePath.split("/");
+    alert(folder[0]);
+}
+</script>
   <style>
     .paths {
       min-height:100px;
@@ -37,9 +44,8 @@
         <input type="text" name="query" required>
         <br>
         <!--
-        <input type="file" id="thefile" onchange="alertFilename()" />
-        <input type="button" onclick="alertFilename()" value="alert" />
-        <br> -->
+        <input type="file" name="file" id="FileUpload" onchange="selectFolder(event)" webkitdirectory mozdirectory msdirectory odirectory directory multiple />
+        -->
         <label for="path">Enter root directory:</label>
         <input type="text" name="root" required>
         <br>
@@ -52,7 +58,7 @@
               {% endfor %}
           </select>
           <br> -->
-          <input type="hidden" id="sim_score" name="sim_score" value="0.6">
+          <input type="hidden" id="sim_score" name="sim_score" value="0.55">
           <input type="checkbox" id="sim_score" name="sim_score" value="1.0">
          <label for="sim_score">Exact query match</label>
          <br>

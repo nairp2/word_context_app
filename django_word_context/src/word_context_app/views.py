@@ -24,6 +24,9 @@ def wordquery(request):
     #    print(request.POST.dict())
     #    print(request.POST.get('query'))
     query = str(request.POST['query'])
+
+    #for filename, file in request.FILES.items():
+    #    name = request.FILES[filename].name
     root = str(request.POST['root'])
     #path = str(request.POST['paths'])
     sim_score = float(request.POST['sim_score'])
@@ -34,6 +37,7 @@ def wordquery(request):
 
     print(query)
     print(root)
+    #print(name)
     #print(path)
     print(sim_score)
 
