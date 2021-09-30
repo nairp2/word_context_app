@@ -164,10 +164,12 @@ def sim_word(query, path, score):
             l_line_list.append(tuple(line_list))
             paragraph_lines = list(line_list)
             #paragraph_lines = [ele for ele in paragraph_lines if ele != []]
-            word_count.append(len(word_found_lines))
+            word_count.append(round(len(word_found_lines)), 0)
 
             pg_list.append(tuple(word_found_lines))
             line_list_words.append(tuple(line_list))
+
+    word_count = np.around(np.array(word_count),0)
 
     sim_score = np.around(np.array(sim_score),2)
 
@@ -191,8 +193,8 @@ def nlp_query(query, root, sim_score):
     if not os.path.exists('Index'):
        os.makedirs('Index')
 
-    if os.path.exists('Index/{}_{}_{}.csv'.format(query, root, sim_score)):
-       df = pd.read_csv('Index/{}_{}_{}.csv'.format(query, root, sim_score))
+    if os.path.exists('Index/{}_{}_{}.csv'.format(query, root.replace("/","_"), sim_score)):
+       df = pd.read_csv('Index/{}_{}_{}.csv'.format(query, root.replace("/","_"), sim_score))
        df = df.fillna('')
        return df
 
@@ -241,7 +243,7 @@ def nlp_query(query, root, sim_score):
     #print("Final df:")
     #print(df)
 
-    df.to_csv("Index/{}_{}_{}.csv".format(query, root, sim_score), index=False)
+    df.to_csv("Index/{}_{}_{}.csv".format(query, root.replace("/","_"), sim_score), index=False)
     #output = df
     #json = {'output': final_df[0]}
     return df
