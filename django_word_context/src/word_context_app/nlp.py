@@ -77,7 +77,219 @@ def sim_word(query, path, score):
     string_txt = str(text)
 
     nlp = spacy.load('en_core_web_lg',disable = ['ner', 'parser'])
+    nlp.Defaults.stop_words -= {
+'about',
+'above',
+'across',
+'after',
+'afterwards',
+'again',
+'against',
+'all',
+'almost',
+'alone',
+'along',
+'already',
+'always',
+'amount',
+'anyhow',
+'anyone',
+'anything',
+'anyway',
+'anywhere',
+'became',
+'because',
+'become',
+'becomes',
+'becoming',
+'before',
+'beforehand',
+'behind',
+'being',
+'below',
+'beside',
+'besides',
+'between',
+'beyond',
+'both',
+'bottom',
+'doing',
+'done',
+'down',
+'due',
+'during',
+'each',
+'eight',
+'either',
+'eleven',
+'else',
+'elsewhere',
+'empty',
+'enough',
+'even',
+'ever',
+'every',
+'everyone',
+'everything',
+'everywhere',
+'except',
+'few',
+'fifteen',
+'fifty',
+'first',
+'five',
+'former',
+'formerly',
+'forty',
+'four',
+'from',
+'front',
+'full',
+'further',
+'get',
+'give',
+'go',
+'here',
+'hereafter',
+'hereby',
+'herein',
+'hereupon',
+'how',
+'hundred',
+'indeed',
+'itself',
+'just',
+'keep',
+'last',
+'latter',
+'latterly',
+'least',
+'less',
+'made',
+'make',
+'many',
+'may',
+'meanwhile',
+'might',
+'mine',
+'more',
+'moreover',
+'most',
+'mostly',
+'move',
+'much',
+'must',
+'myself',
+'name',
+'namely',
+'neither',
+'never',
+'nevertheless',
+'next',
+'nine',
+'nobody',
+'none',
+'noone',
+'not',
+'nothing',
+'now',
+'nowhere',
+'often',
+'one',
+'only',
+
+'other',
+'others',
+'otherwise',
+
+'ourselves',
+'out',
+'over',
+'own',
+'part',
+'per',
+'perhaps',
+'please',
+'quite',
+'rather',
+'really',
+'regarding',
+'same',
+'say',
+'see',
+'seem',
+'seemed',
+'seeming',
+'seems',
+'serious',
+'several',
+'should',
+'show',
+'side',
+'since',
+'six',
+'sixty',
+'some',
+'somehow',
+'someone',
+'something',
+'sometime',
+'sometimes',
+'somewhere',
+'still',
+'such',
+
+'ten',
+
+
+
+'third',
+
+
+'three',
+
+
+'together',
+
+'top',
+
+'twelve',
+'twenty',
+'two',
+'under',
+'unless',
+
+'used',
+'using',
+'various',
+'very',
+'well',
+
+
+'whatever',
+'when',
+'whence',
+'whenever',
+'where',
+'whereafter',
+
+'whereby',
+'wherein',
+'whereupon',
+'wherever',
+'whether',
+'which',
+'while',
+'whither',
+'who',
+'whoever',
+'whole',
+'within',
+'without',
+
+}
     spacy_stopwords = spacy.lang.en.stop_words.STOP_WORDS
+
 
     tokens = nlp(text)
     lemma_list = []
@@ -90,7 +302,8 @@ def sim_word(query, path, score):
 
     tokens_str = text.lower()
     tokens_str = word_tokenize(tokens_str)
-    tokens_str = [i for i in tokens_str if not i in stop_words]
+    tokens_str = [i for i in tokens_str if not i in nlp.Defaults.stop_words]
+    #print(token)
 #FI
 
     query = query
@@ -142,10 +355,18 @@ def sim_word(query, path, score):
     pg_list = []
     line_list_words = []
 
+    for i,j in enumerate(lemma_list):
+           if str(j.text[-1]) == 's' and j[0].tag_ == 'NNS':
+
+               j = str(j.text[:-1])
+
+               lemma_list[i] = nlp(j)
+
     for i in lemma_list:
 
-        if str(i.text[-1]) == 's':
-           continue
+
+
+
         s = key.similarity(i)
 
         if s >= score:
@@ -164,7 +385,7 @@ def sim_word(query, path, score):
             l_line_list.append(tuple(line_list))
             paragraph_lines = list(line_list)
             #paragraph_lines = [ele for ele in paragraph_lines if ele != []]
-            word_count.append(round(len(word_found_lines)), 0)
+            word_count.append(round(len(word_found_lines), 0))
 
             pg_list.append(tuple(word_found_lines))
             line_list_words.append(tuple(line_list))
