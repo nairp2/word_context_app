@@ -15,7 +15,9 @@ from pathlib import Path
 import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-FILES_DIR = os.path.abspath(os.path.join(BASE_DIR, '../../'))
+#print(BASE_DIR)
+#FILES_DIR = os.path.abspath(os.path.join(BASE_DIR, '../../'))
+#print(FILES_DIR)
 #FILES_DIR = Path(__file__).resolve().parent.parent.parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
@@ -121,10 +123,10 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-STATICFILES_DIRS = [
+#STATICFILES_DIRS = [
     #os.path.join(BASE_DIR, "bbc_doc"), # TODO: check if txt file can be passed
-    os.path.join(BASE_DIR, "static"),
-]
+#    os.path.join(FILES_DIR, "bbc_doc"),
+#]
 #STATICFILES_DIRS = [
 #    os.path.join(BASE_DIR, "bbc_doc"), # TODO: check if txt file can be passed
 #]

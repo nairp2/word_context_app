@@ -17,13 +17,14 @@ stop_words = set(stopwords.words("english"))
 def all_file_paths(master_directory):
 
     path_l = []
-    for root, dirs, files in os.walk(master_directory):
+    desktop_path = '../../'
+    for root, dirs, files in os.walk(desktop_path + master_directory):
         if files:
             for i in files:
                 path = os.path.join(root, i)
                 path = path.replace(os.path.sep, '/')
 
-                if path == 'bbc_doc/desktop.ini': # exlcude files and move it to settings.
+                if os.path.splitext(path)[1] != '.docx': # exlcude files and move it to settings.
                     continue
                 path_l.append(path)
 
