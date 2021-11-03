@@ -23,7 +23,7 @@ def all_file_paths(master_directory):
                 path = os.path.join(root, i)
                 path = path.replace(os.path.sep, '/')
 
-                if path == 'bbc_doc/desktop.ini':
+                if path == 'bbc_doc/desktop.ini': # exlcude files and move it to settings.
                     continue
                 path_l.append(path)
 

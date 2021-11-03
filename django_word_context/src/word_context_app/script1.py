@@ -1,8 +1,8 @@
 from word_context_app import nlp
 
-def script_load_paths():
-    all_path = nlp.all_file_paths('bbc_doc') # TODO: all_file_path parameter passed automatically
-    return all_path
+#def script_load_paths():
+#    all_path = nlp.all_file_paths('bbc_doc') # TODO: all_file_path parameter passed automatically
+#    return all_path
 
 def script_select_paths(query, root, score):
     df = nlp.nlp_query(query, root, score)

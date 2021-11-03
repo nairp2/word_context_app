@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+{% load static %}
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
@@ -16,8 +17,8 @@
     var relativePath = theFiles[0].webkitRelativePath;
     var folder = relativePath.split("/");
     alert(folder[0]);
-}
-</script>
+  }
+  </script>
   <style>
     .paths {
       min-height:100px;
@@ -27,77 +28,154 @@
       width:100px;
       display: contents;
     }
+
+    .open {
+      margin: -5px 0;
+      /* list-style-image: url('{% static 'images/yellow_open.svg' %}'); */
+      list-style: none;
+    }
+    .open::before {
+      content: '';
+      display: inline-block;
+      height: 17px;
+      width: 17px;
+      background-image: url('{% static 'images/yellow_open.svg' %}');
+    }
+
+    .closed {
+      margin: -5px 0;
+      /* list-style-image: url('{% static 'images/yellow_closed.svg' %}');  */
+      list-style: none;
+    }
+    .closed::before {
+      content: '';
+      display: inline-block;
+      height: 17px;
+      width: 17px;
+      background-image: url('{% static 'images/yellow_closed.svg' %}');
+    }
   </style>
   <body>
-  <div class="container">
-    <br>
-    <br>
-    <div class="content">
-    <!--  <form name="paths" method="post" class="text-left" action="wordquery">
-        {% for path in paths %}
-          <li><a href="{% url 'home' %}">{{ path|safe }}</a></li>
+
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark"> <a class="navbar-brand" href="#" data-abc="true">Word Context Feedback</a> <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation"> <span class="navbar-toggler-icon"></span> </button>
+      <div class="collapse navbar-collapse" id="navbarColor02">
+          <ul class="navbar-nav mr-auto">
+              <li class="nav-item active"> <a class="nav-link" href="#" data-abc="true">Home <span class="sr-only">(current)</span></a> </li>
+              <li class="nav-item"> <a class="nav-link" href="#" data-abc="true">About </a> </li>
+              <li class="nav-item"> <a class="nav-link" href="#" data-abc="true">Assyst </a> </li>
+              <li class="nav-item"> <a class="nav-link" href="#" data-abc="true">Contact </a> </li>
+          </ul>
+          <form onsubmit="event.preventDefault()" class="form-inline my-2 my-lg-0"> <input class="form-control mr-sm-2" type="text" placeholder="Search"> <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button> </form>
+      </div>
+  </nav>
+
+    <div class="container mt-3">
+      <div class="row">
+        <div class="col-3">
+          {% for key, values in dirs.items %}
+          <ul>
+            <li class="closed" id="{{key}}Main" >
+              <a href="#" onclick="{{key}}Function()">{{ key }}</a>
+              <ul id="{{key}}UL" style="display: none;">
+                {% for v in values %}
+                  <li class="closed" id="{{v}}Inner"> <a href="#" onclick="{{v}}InnerFunction()">{{ v }}</a></li>
+                  <script type="text/javascript">
+                    function {{v}}InnerFunction() {
+                      document.getElementById("rootinput").value="{{v}}";
+                    }
+                  </script>
+                {% endfor %}
+              </ul>
+            </li>
+          </ul>
+
+          <script type="text/javascript">
+            function {{key}}Function() {
+              var x = document.getElementById("{{key}}UL");
+              var keyMain = document.getElementById("{{key}}Main");
+              if (x.style.display === "none") {
+                x.style.display = "block";
+                keyMain.setAttribute("class","open");
+              } else {
+                x.style.display = "none";
+                keyMain.setAttribute("class","closed");
+              }
+              document.getElementById("rootinput").value="{{key}}";
+            }
+          </script>
         {% endfor %}
-      </form> -->
-      <form method="post" class="text-center" enctype="multipart/form-data" action="wordquery">
-        {% csrf_token %}
-        <label for="query">Enter query:</label>
-        <input type="text" name="query" required>
-        <br>
+        </div>
         <!--
-        <input type="file" name="file" id="FileUpload" onchange="selectFolder(event)" webkitdirectory mozdirectory msdirectory odirectory directory multiple />
-        -->
-        <label for="path">Enter root directory:</label>
-        <input type="text" name="root" required>
-        <br>
-        <!--
-        <label for="path">Select query directory path:</label>
-          <select name="paths" size="1" id="paths">
-            <option value="{{paths.0}}" SELECTED>{{paths.0}}</option>
-              {% for i in paths %}
-                <option value="{{i}}">{{i}}</option>
+        <div class="container">
+          <br>
+          <br>
+          <div class="content">
+            <form name="paths" method="post" class="text-left" action="wordquery">
+              {% for path in paths %}
+                <li><a href="{% url 'home' %}">{{ path|safe }}</a></li>
               {% endfor %}
-          </select>
-          <br> -->
-          <input type="hidden" id="sim_score" name="sim_score" value="0.55">
-          <input type="checkbox" id="sim_score" name="sim_score" value="1.0">
-         <label for="sim_score">Exact query match</label>
-         <br>
-        <input type="submit" value="Search">
-      </form>
-    </div>
-     <p class="text-center">{{word_not_found}}</p>
-  </div>
-  <br>
-  <h2 class="text-center"><u>Word Context Feedback</u></h2><br>
-  <p class="text-center">{{query_UI}}{{query}}, {{root_UI}}{{root}}, {{sim_UI}}{{sim_score}}</p>
-  <div class="container" style= "height: 450px; overflow-y: scroll;">
-      <table class="table table-dark table-striped">
-        <thead>
-          <tr>
-            <th>Words</th>
-            <th>Similarity Score</th>
-            <th>Paragraph Numbers</th>
-            <th>Count</th>
-            <th>Paragraphs</th>
-            <th>Path</th>
-          </tr>
-        </thead>
-        <tbody>
-        <!-- jinja2 Technique -->
-        {% if d %}
-        {% for i in d %}
-          <tr>
-            <td>{{i.Words}}</td>
-            <td>{{i.Similarity_Score}}</td>
-            <td>{{i.Paragraph_Numbers}}</td>
-            <td>{{i.Count}}</td>
-            <td>{{i.Paragraphs}}</td>
-            <td>{{i.Path}}</td>
-          </tr>
-        {% endfor %}
-        {% endif %}
-        </tbody>
-      </table>
-    </div>
+            </form> -->
+          <div class="col-6">
+          <form method="post" class="text-center" enctype="multipart/form-data" action="wordquery">
+            {% csrf_token %}
+            <label for="query">Enter query:</label>
+            <input type="text" name="query" required>
+            <br>
+            <!--
+            <input type="file" name="file" id="FileUpload" onchange="selectFolder(event)" webkitdirectory mozdirectory msdirectory odirectory directory multiple />
+            -->
+            <label for="path">Enter root directory:</label>
+            <input type="text" name="root" id="rootinput" required>
+            <br>
+            <!--
+            <label for="path">Select query directory path:</label>
+              <select name="paths" size="1" id="paths">
+                <option value="{{paths.0}}" SELECTED>{{paths.0}}</option>
+                  {% for i in paths %}
+                    <option value="{{i}}">{{i}}</option>
+                  {% endfor %}
+              </select>
+              <br> -->
+              <input type="hidden" id="sim_score" name="sim_score" value="0.55">
+              <input type="checkbox" id="sim_score" name="sim_score" value="1.0">
+             <label for="sim_score">Exact query match</label>
+             <br>
+            <input type="submit" value="Search">
+          </form>
+        </div>
+           <p class="text-center">{{word_not_found}}</p>
+        </div>
+        <br>
+        <h2 class="text-center"><u>Word Context Feedback</u></h2><br>
+        <p class="text-center">{{query_UI}}{{query}}, {{root_UI}}{{root}}, {{sim_UI}}{{sim_score}}</p>
+        <div class="container" style= "height: 450px; overflow-y: scroll;">
+            <table class="table table-dark table-striped">
+              <thead>
+                <tr>
+                  <th>Words</th>
+                  <th>Similarity Score</th>
+                  <th>Paragraph Numbers</th>
+                  <th>Count</th>
+                  <th>Paragraphs</th>
+                  <th>Path</th>
+                </tr>
+              </thead>
+              <tbody>
+              <!-- jinja2 Technique -->
+              {% if d %}
+              {% for i in d %}
+                <tr>
+                  <td>{{i.Words}}</td>
+                  <td>{{i.Similarity_Score}}</td>
+                  <td>{{i.Paragraph_Numbers}}</td>
+                  <td>{{i.Count}}</td>
+                  <td>{{i.Paragraphs}}</td>
+                  <td>{{i.Path}}</td>
+                </tr>
+              {% endfor %}
+              {% endif %}
+              </tbody>
+            </table>
+          </div>
   </body>
 </html>
