@@ -9,8 +9,6 @@ https://docs.djangoproject.com/en/3.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
-
-from unipath import Path
 from pathlib import Path
 import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -123,10 +121,9 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-#STATICFILES_DIRS = [
-    #os.path.join(BASE_DIR, "bbc_doc"), # TODO: check if txt file can be passed
-#    os.path.join(FILES_DIR, "bbc_doc"),
-#]
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static"), # TODO: check if txt file can be passed
+]
 #STATICFILES_DIRS = [
 #    os.path.join(BASE_DIR, "bbc_doc"), # TODO: check if txt file can be passed
 #]

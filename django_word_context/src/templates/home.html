@@ -75,13 +75,18 @@
           {% for key, values in dirs.items %}
           <ul>
             <li class="closed" id="{{key}}Main" >
-              <a href="#" onclick="{{key}}Function()">{{ key }}</a>
+              <a href="#" onclick="{{key}}Function()" id="{{key}}Main-link">{{ key }}</a>
               <ul id="{{key}}UL" style="display: none;">
                 {% for v in values %}
                   <li class="closed" id="{{v}}Inner"> <a href="#" onclick="{{v}}InnerFunction()">{{ v }}</a></li>
                   <script type="text/javascript">
                     function {{v}}InnerFunction() {
-                      document.getElementById("rootinput").value="{{v}}";
+                      let root = document.getElementById("{{key}}Main-link").innerText
+                      console.log("{{key}}", '85')
+                      console.log("{{key}}")
+                      console.log(document.getElementById("{{key}}Main"))
+                      console.log(document.getElementById("{{key}}Main-link"))
+                      document.getElementById("rootinput").value=root + "/{{v}}";
                     }
                   </script>
                 {% endfor %}
